@@ -1,8 +1,13 @@
+// todolistmodel.h
 #ifndef TODOLISTMODEL_H
 #define TODOLISTMODEL_H
 
 #include <QAbstractListModel>
 #include <QList>
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
 #include "todoitem.h"
 
 class TodoListModel : public QAbstractListModel {
@@ -21,9 +26,15 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    Q_INVOKABLE void addTask(const QString &name);
+    Q_INVOKABLE void addTask(const QString &name, bool completed = false);
     Q_INVOKABLE void updateTask(int index, bool completed, const QString &name);
     Q_INVOKABLE void deleteTask(int index);
+
+    void loadTasks();
+    void saveTasks();
+
+public slots:
+    void onDataChanged();
 
 private:
     QList<TodoItem> m_items;

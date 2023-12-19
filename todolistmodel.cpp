@@ -1,7 +1,10 @@
+// todolistmodel.cpp
 #include "todolistmodel.h"
 
 TodoListModel::TodoListModel(QObject *parent)
     : QAbstractListModel(parent) {
+    loadTasks();
+    connect(this, &TodoListModel::dataChanged, this, &TodoListModel::onDataChanged);
 }
 
 int TodoListModel::rowCount(const QModelIndex &parent) const {
@@ -34,6 +37,7 @@ void TodoListModel::deleteTask(int index) {
     beginRemoveRows(QModelIndex(), index, index);
     m_items.removeAt(index);
     endRemoveRows();
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), QVector<int>() << CompletedRole);
 }
 
 bool TodoListModel::setData(const QModelIndex &index, const QVariant &value, int role) {
@@ -71,11 +75,12 @@ QHash<int, QByteArray> TodoListModel::roleNames() const {
     return roles;
 }
 
-void TodoListModel::addTask(const QString &name) {
+void TodoListModel::addTask(const QString &name, bool completed) {
     const int index = m_items.count();
     beginInsertRows(QModelIndex(), index, index);
-    m_items.append(TodoItem(name));
+    m_items.append(TodoItem(name, completed));
     endInsertRows();
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), QVector<int>() << CompletedRole);
 }
 
 void TodoListModel::updateTask(int index, bool completed, const QString &name) {
@@ -86,4 +91,37 @@ void TodoListModel::updateTask(int index, bool completed, const QString &name) {
     item.setName(name);
     item.setCompleted(completed);
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), QVector<int>() << CompletedRole);
+}
+
+void TodoListModel::loadTasks() {
+    QFile file("todolist.json");
+    if (file.open(QIODevice::ReadOnly)) {
+        QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
+        QJsonArray array = doc.array();
+        for (const QJsonValue &value : array) {
+            QJsonObject obj = value.toObject();
+            addTask(obj["name"].toString(), obj["completed"].toBool());
+        }
+        qDebug() << "Loaded " << m_items.count() << " tasks from file.";
+    }
+}
+
+void TodoListModel::saveTasks() {
+    QFile file("todolist.json");
+    if (file.open(QIODevice::WriteOnly)) {
+        QJsonArray array;
+        for (const TodoItem &item : m_items) {
+            QJsonObject obj;
+            obj["name"] = item.name();
+            obj["completed"] = item.isCompleted();
+            array.append(obj);
+        }
+        QJsonDocument doc(array);
+        file.write(doc.toJson());
+        qDebug() << "Saved " << m_items.count() << " tasks to file.";
+    }
+}
+
+void TodoListModel::onDataChanged() {
+    saveTasks();
 }

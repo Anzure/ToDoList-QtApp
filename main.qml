@@ -1,3 +1,4 @@
+// main.qml
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
@@ -108,7 +109,7 @@ ApplicationWindow {
             text: "Legg til ny oppgave"
             onClicked: {
                 if (taskDescription.text !== "") {
-                    todoModel.addTask(taskDescription.text);
+                    todoModel.addTask(taskDescription.text, false);
                     infoText.text = "🚩 Lagt til ny oppgave: " + taskDescription.text;
                     infoText.color = "darkgreen";
                     infoView.visible = true;
