@@ -13,7 +13,13 @@ if (Qt6_VERSION VERSION_GREATER_EQUAL 6.3)
     qt_standard_project_setup()
 endif()
 
-qt_add_executable(ToDoListApp main.cpp)
+qt_add_executable(ToDoListApp main.cpp
+
+
+
+
+    todoitem.h todoitem.cpp
+    todolistmodel.h todolistmodel.cpp)
 
 qt_add_resources(ToDoListApp "configuration"
     PREFIX "/"
