@@ -2,7 +2,8 @@
 #include "todoitem.h"
 
 TodoItem::TodoItem(const QString &name, bool completed)
-    : m_name(name), m_completed(completed) {}
+    : m_name(name), m_completed(completed) {
+}
 
 QString TodoItem::name() const {
     return m_name;
