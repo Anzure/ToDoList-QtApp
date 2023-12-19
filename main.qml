@@ -3,7 +3,7 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
 ApplicationWindow {
-    title: "ToDo List"
+    title: "To-Do List app"
     width: 400
     height: 600
     visible: true
@@ -50,21 +50,16 @@ ApplicationWindow {
                         anchors.verticalCenter: parent.verticalCenter
                         readOnly: checkBox.checked
                         onAccepted: {
-                            if (taskName.text !== model.name) {
-                                if (taskName.text !== "") {
-                                    infoText.text = "ℹ️ Ny oppgave beskrivelse: " + taskName.text;
-                                    infoText.color = "darkgreen";
-                                    infoView.visible = true;
-                                    todoModel.updateTask(index, checkBox.checked, taskName.text)
-                                } else {
-                                    infoText.text = "⚠️ Feilet! Ugyldig oppgave beskrivelse."
-                                    infoText.color = "darkred";
-                                    infoView.visible = true;
-                                    taskName.text = model.name;
-                                }
-                            }
-                            else if (infoView.visible === true) {
-                                infoView.visible = false;
+                            if (taskName.text !== "") {
+                                infoText.text = "💾 Ny oppgave beskrivelse: " + taskName.text;
+                                infoText.color = "darkgreen";
+                                infoView.visible = true;
+                                todoModel.updateTask(index, checkBox.checked, taskName.text)
+                            } else {
+                                infoText.text = "⚠️ Feilet! Ugyldig oppgave beskrivelse."
+                                infoText.color = "darkred";
+                                infoView.visible = true;
+                                taskName.text = model.name;
                             }
                         }
                         onTextChanged: {
@@ -72,8 +67,6 @@ ApplicationWindow {
                                 infoText.text = "📝 Trykk ENTER for å lagre ny beskrivelse..";
                                 infoText.color = "darkgreen";
                                 infoView.visible = true;
-                            } else {
-                                infoView.visible = false;
                             }
                         }
                     }
@@ -107,8 +100,7 @@ ApplicationWindow {
             id: taskDescription
             text: ""
             placeholderText: "Beskriv oppgaven"
-            onAccepted: todoModel.addTask(taskDescription.text)
-            onTextChanged: infoView.visible = false
+            onAccepted: addTaskButton.clicked()
             Layout.fillWidth: true
         }
         Button {
