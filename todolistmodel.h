@@ -22,7 +22,7 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     Q_INVOKABLE void addTask(const QString &name);
-    Q_INVOKABLE void updateTask(int index, bool completed);
+    Q_INVOKABLE void updateTask(int index, bool completed, const QString &name);
     Q_INVOKABLE void deleteTask(int index);
 
 private:

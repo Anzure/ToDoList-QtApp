@@ -24,11 +24,59 @@ ApplicationWindow {
                 anchors.fill: parent
                 anchors.margins: 10
 
-                CheckBox {
-                    id: checkBox
-                    text: model.name
-                    checked: model.completed
-                    onCheckedChanged: todoModel.updateTask(index, checkBox.checked)
+                Row {
+                    CheckBox {
+                        id: checkBox
+                        anchors.verticalCenter: parent.verticalCenter
+                        checked: model.completed
+                        onCheckedChanged: {
+                            if (checkBox.checked) {
+                                infoText.text = "✅ Fullført oppgave: " + model.name;
+                                infoText.color = "darkgreen";
+                                infoView.visible = true;
+                            } else {
+                                infoText.text = "❌ Ikke fullført oppgave: " + model.name;
+                                infoText.color = "darkgreen";
+                                infoView.visible = true;
+                            }
+                            todoModel.updateTask(index, checkBox.checked, model.name)
+                        }
+                    }
+
+                    TextField {
+                        id: taskName
+                        text: model.name
+                        background: null
+                        anchors.verticalCenter: parent.verticalCenter
+                        readOnly: checkBox.checked
+                        onAccepted: {
+                            if (taskName.text !== model.name) {
+                                if (taskName.text !== "") {
+                                    infoText.text = "ℹ️ Ny oppgave beskrivelse: " + taskName.text;
+                                    infoText.color = "darkgreen";
+                                    infoView.visible = true;
+                                    todoModel.updateTask(index, checkBox.checked, taskName.text)
+                                } else {
+                                    infoText.text = "⚠️ Feilet! Ugyldig oppgave beskrivelse."
+                                    infoText.color = "darkred";
+                                    infoView.visible = true;
+                                    taskName.text = model.name;
+                                }
+                            }
+                            else if (infoView.visible === true) {
+                                infoView.visible = false;
+                            }
+                        }
+                        onTextChanged: {
+                            if (taskName.text !== model.name) {
+                                infoText.text = "📝 Trykk ENTER for å lagre ny beskrivelse..";
+                                infoText.color = "darkgreen";
+                                infoView.visible = true;
+                            } else {
+                                infoView.visible = false;
+                            }
+                        }
+                    }
                 }
 
                 Button {
@@ -60,6 +108,7 @@ ApplicationWindow {
             text: ""
             placeholderText: "Beskriv oppgaven"
             onAccepted: todoModel.addTask(taskDescription.text)
+            onTextChanged: infoView.visible = false
             Layout.fillWidth: true
         }
         Button {
@@ -68,7 +117,9 @@ ApplicationWindow {
             onClicked: {
                 if (taskDescription.text !== "") {
                     todoModel.addTask(taskDescription.text);
-                    infoView.visible = false;
+                    infoText.text = "🚩 Lagt til ny oppgave: " + taskDescription.text;
+                    infoText.color = "darkgreen";
+                    infoView.visible = true;
                     taskDescription.text = "";
                 } else {
                     infoText.text = "⚠️ Feilet! Mangler oppgave beskrivelse."

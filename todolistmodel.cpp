@@ -78,11 +78,12 @@ void TodoListModel::addTask(const QString &name) {
     endInsertRows();
 }
 
-void TodoListModel::updateTask(int index, bool completed) {
+void TodoListModel::updateTask(int index, bool completed, const QString &name) {
     if (index < 0 || index >= m_items.count())
         return;
 
     TodoItem &item = m_items[index];
+    item.setName(name);
     item.setCompleted(completed);
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), QVector<int>() << CompletedRole);
 }
