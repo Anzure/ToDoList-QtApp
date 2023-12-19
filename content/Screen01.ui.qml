@@ -1,13 +1,5 @@
-/*
-This is a UI file (.ui.qml) that is intended to be edited in Qt Design Studio only.
-It is supposed to be strictly declarative and only uses a subset of QML. If you edit
-this file manually, you might introduce QML code that is not supported by Qt Design Studio.
-Check out https://doc.qt.io/qtcreator/creator-quick-ui-forms.html for details on .ui.qml files.
-*/
-
 import QtQuick 6.2
 import QtQuick.Controls 6.2
-import ToDo-List
 
 Rectangle {
     id: rectangle
@@ -31,7 +23,7 @@ Rectangle {
 
     Text {
         id: label
-        text: qsTr("Hello ToDo-List")
+        text: qsTr("Hello ToDoList")
         anchors.top: button.bottom
         font.family: Constants.font.family
         anchors.topMargin: 45

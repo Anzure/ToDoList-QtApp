@@ -89,7 +89,7 @@ Project {
     importPaths: [ "imports", "asset_imports" ]
 
     /* Required for deployment */
-    targetDirectory: "/opt/ToDo-List"
+    targetDirectory: "/opt/ToDoList"
 
     qdsVersion: "4.1"
 

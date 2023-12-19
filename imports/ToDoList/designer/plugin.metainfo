@@ -1,6 +1,6 @@
 MetaInfo {
     Type {
-        name: "ToDo-List.EventListSimulator"
+        name: "ToDoList.EventListSimulator"
         icon: ":/qtquickplugin/images/item-icon16.png"
 
         Hints {
